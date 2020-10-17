@@ -1,28 +1,34 @@
 const Task = require('../schemas/task');
 
-const addTask = async ({description, completed}) => {
+const addTask = async ({description, completed, user}) => {
     let task = new Task({
         description,
-        completed
+        completed,
+        user
     });
     return await task.save();
 }
 
-const getTask = async (id) => {
-    return await Task.findById(id);
+const getTask = async (userId, taskId) => {
+    return await Task.findOne({ _id: taskId, user: userId });
 };
 
-const getAllTasks = async () => {
-    return await Task.find({});
+const getAllTasks = async (userId) => {
+    return await Task.find({user: userId}).populate('user', 'name email');
 };
 
-const updateById =  async (id, data) => {
-    return await Task.findByIdAndUpdate(id, data, { new: true, runValidators: true, context: 'query'});
+const updateById =  async (userId, taskId, data) => {
+    return await Task.findOneAndUpdate({ _id: taskId, user: userId }, data, { new: true, runValidators: true, context: 'query'});
+};
+
+const deleteById = async (userId, taskId) => {
+    return await Task.findOneAndDelete({ _id: taskId, user: userId });
 }
 
 module.exports = {
     addTask,
     getTask,
     getAllTasks,
-    updateById
+    updateById,
+    deleteById
 }

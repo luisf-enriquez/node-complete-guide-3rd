@@ -3,8 +3,7 @@ const Joi = require('joi');
 const taskSchema = {
     body: {
         description: Joi.string().required(),
-        completed: Joi.boolean().default(false),
-        email: Joi.string().email({ minDomainAtoms: 2 })
+        completed: Joi.boolean().default(false)
     }
 };
 
@@ -39,10 +38,18 @@ const updateTask = {
     }
 };
 
+const login = {
+    body:{
+        email: Joi.string().required(),
+        password: Joi.string().required()
+    }
+};
+
 module.exports = {
     taskSchema,
     getTask,
     addUser,
     updateUser,
-    updateTask
+    updateTask,
+    login
 }

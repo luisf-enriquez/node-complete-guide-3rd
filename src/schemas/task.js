@@ -1,3 +1,4 @@
+const { required } = require('joi');
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 const { Schema } = mongoose;
@@ -11,6 +12,12 @@ const taskSchema = new Schema({
 	completed: { 
 		type: Boolean, 
 		default: false 
+	},
+	// user owner of the task
+	user: {
+		type: mongoose.Schema.Types.ObjectId,
+		required: true,
+		ref: 'User'
 	}
 }, { strict: false });
 

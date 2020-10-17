@@ -26,6 +26,11 @@ app.use((req, res, next) => {
     next();
 });
 
+//  Maintenance Middleware
+// app.use((req, res, next) => {
+//   res.status(503).send('Site is currently down, check back soon');
+// })
+
 // Routes
 app.use(require('./routes/routes'));
 
