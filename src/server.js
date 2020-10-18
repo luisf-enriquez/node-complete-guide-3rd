@@ -4,7 +4,6 @@ const config = require('../config/config');
 const mongo = require('./services/mongodb');
 
 const server = http.createServer(app);
-
 (async () => {
     try {
         const log = await mongo.connectMongoDB();

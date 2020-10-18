@@ -1,4 +1,3 @@
-const { required } = require('joi');
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 const { Schema } = mongoose;
@@ -19,7 +18,7 @@ const taskSchema = new Schema({
 		required: true,
 		ref: 'User'
 	}
-}, { strict: false });
+}, { strict: false, timestamps: true });
 
 taskSchema.plugin(uniqueValidator, { message: '{PATH} debe ser unico' });
 

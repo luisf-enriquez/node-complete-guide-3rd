@@ -45,11 +45,22 @@ const login = {
     }
 };
 
+const fetchTasks = {
+    query:{
+        completed: Joi.string().optional(),
+        limit: Joi.number().default(10),
+        skip: Joi.number().default(0), // this skip a certain number of records
+        sortBy: Joi.string().optional(),
+        asc: Joi.number().default(1)
+    }
+};
+
 module.exports = {
     taskSchema,
     getTask,
     addUser,
     updateUser,
     updateTask,
-    login
+    login,
+    fetchTasks
 }

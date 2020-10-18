@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const moment = require('moment-timezone');
 const uniqueValidator = require('mongoose-unique-validator');
 const Task = require('./task');
 const { Schema } = mongoose;
@@ -49,7 +50,10 @@ const userSchema = new Schema({
             required: true
         }
     }]
-}, { strict: false, toJSON: { virtuals: true }, toObject: { virtuals:true } });
+}, { 
+    strict: false, toJSON: { virtuals: true }, toObject: { virtuals:true },
+    timestamps: true
+});
 
 userSchema.plugin(uniqueValidator, { message: '{PATH} must be unique' });
 

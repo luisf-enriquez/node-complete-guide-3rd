@@ -9,7 +9,7 @@ router.get('/task/:id', expressJoi(schema.getTask), auth, (req, res) => {
     controller.getTaskById(req, res);
 });
 
-router.get('/task', auth, (req, res) => {
+router.get('/task', auth, expressJoi(schema.fetchTasks),(req, res) => {
     controller.getAll(req, res);
 })
 

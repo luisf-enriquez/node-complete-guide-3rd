@@ -1,5 +1,6 @@
 const mongoModel = require('../models/task');
 const utils = require('../../config/utils');
+const { query } = require('express');
 module.exports.addTask = async (req, res) => {
     try {
         let data = req.body;
@@ -20,12 +21,23 @@ module.exports.addTask = async (req, res) => {
 
 module.exports.getAll = async (req, res) => {
     try {
-        const result = await mongoModel.getAllTasks(req.user._id);
+        const { skip, limit, sortBy = 'createdAt', asc = 1 } = req.query;
+        let result;
+
+        if (!req.query.completed) {
+            result = await mongoModel.getAllTasks({ 
+                user: req.user._id
+            }, { skip, limit, sortBy, asc } );
+        } else {
+            result = await mongoModel.getAllTasks({ 
+                user: req.user._id, completed: req.query.completed
+            }, { skip, limit, sortBy, asc } );
+        }
+        
         // const doc = await req.user.populate('tasks').execPopulate();
         return utils.buildResponse(res, 200, result, 'Tasks fetched');
     } catch (error) {
-        console.log(error);
-        utils.buildResponse(res, 500, error, 'Internal server error');
+        utils.buildResponse(res, 500, error, error.message);
     }
 }
 module.exports.getTaskById = async (req, res) => {
