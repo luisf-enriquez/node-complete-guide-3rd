@@ -41,7 +41,7 @@ router.delete('/user/me', auth, (req, res) => {
     controller.deleteUser(req, res);
 });
 
-router.post('/user/me/avatar', upload.single('avatar'), (req, res) => {
+router.post('/user/me/avatar', auth, upload.single('avatar'), (req, res) => {
     controller.uplodaAvatar(req, res);
 }, (error, req, res, next) => {
     if (error.name === 'MulterError') {
@@ -52,5 +52,14 @@ router.post('/user/me/avatar', upload.single('avatar'), (req, res) => {
         }
     });    
 });
+
+router.delete('/user/me/avatar', auth, (req, res) => {
+    controller.deleteAvatar(req, res);
+});
+
+// route to get image as an URL we are serving files stored in our DATABASE
+router.get('/user/:id/avatar', (req, res) => {
+    controller.getAvatar(req, res);
+})
 
 module.exports = router;

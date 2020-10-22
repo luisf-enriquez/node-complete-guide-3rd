@@ -12,7 +12,7 @@ const auth = async (req, res, next) => {
             throw new Error('Expired Token');
         }
         req.token = token;
-        req.user = user; // we attach the user to the request object, this is a moongose schema
+        req.user = user; // we attach the user to the request object, this is a moongose document
         next();
     } catch (error) {
         res.status(401).json({error: 'Unauthorized to make this request'});

@@ -106,12 +106,46 @@ module.exports.logOutAll = async (req, res) => {
 
 module.exports.uplodaAvatar = async (req, res) => {
     try {
-        console.log(req.file);
         if (!req.file) {
             return utils.buildResponse(res, 400, {}, 'An image need to be attached');
         }
+        req.user.fileExtension = req.file.originalname.split('.')[1];
+        req.user.avatar = req.file.buffer;
+        await req.user.save();
         return utils.buildResponse(res, 200, {}, 'File Uploaded');
     } catch (error) {
         console.log(error);
     }
-}
+};
+
+module.exports.deleteAvatar = async (req, res) => {
+    try {
+        // delete req.user.avatar;
+        req.user.avatar = null;
+        await req.user.save();
+        return utils.buildResponse(res, 200, {}, 'Avatar deleted');
+    } catch (error) {
+        console.log(error);
+        return utils.buildResponse(res, 500, {}, error);
+    }
+};
+
+// controller to return the URL to acces the image stored for the user profile
+module.exports.getAvatar = async (req, res) => {
+    try {
+        const user = await mongoModel.getUser(req.params.id);
+        if (user === null) {
+            return utils.buildResponse(res, 404 , {}, 'The user with the given ID does not exist');
+        } else if (!user.avatar) {
+            return utils.buildResponse(res, 404 , {}, 'The user with the given ID does not have an avatar');
+        }
+
+        // set the content-type to indicate express that we are sending an image instead of JSON
+
+        res.set('Content-Type', `image/${user.fileExtension}`);
+        return res.status(200).send(user.avatar);
+    } catch (error) {
+        console.log(error);
+        return utils.buildResponse(res, 404, {}, error);
+    }
+};

@@ -49,7 +49,9 @@ const userSchema = new Schema({
             type: String,
             required: true
         }
-    }]
+    }],
+    avatar: { type: Buffer },
+    fileExtension: { type: String, default: null }
 }, { 
     strict: false, toJSON: { virtuals: true }, toObject: { virtuals:true },
     timestamps: true
@@ -74,6 +76,7 @@ userSchema.methods.toJSON = function () {
 	let userObject = user.toObject();
     delete userObject.password;
     delete userObject.tokens;
+    delete userObject.avatar;
 	return userObject;
 };
 
