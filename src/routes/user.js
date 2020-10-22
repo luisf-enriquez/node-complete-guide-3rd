@@ -3,14 +3,14 @@ const expressJoi = require('express-joi-validator');
 const router =  express.Router();
 const controller =  require('../controllers/user');
 const schema =  require('../../config/validators');
-const auht = require('../middlewares/auth');
 const auth = require('../middlewares/auth');
+const upload = require('../services/multer_profile_avatar');
 
 router.get('/user/:id', expressJoi(schema.getTask), (req, res) => {
     controller.getUserById(req, res);
 });
 
-router.get('/users/me', auht, (req, res) => {
+router.get('/users/me', auth, (req, res) => {
     controller.getProfile(req, res);
 });
 
@@ -39,6 +39,18 @@ router.put('/user/me', expressJoi(schema.updateUser), auth, (req, res) => {
 
 router.delete('/user/me', auth, (req, res) => {
     controller.deleteUser(req, res);
+});
+
+router.post('/user/me/avatar', upload.single('avatar'), (req, res) => {
+    controller.uplodaAvatar(req, res);
+}, (error, req, res, next) => {
+    if (error.name === 'MulterError') {
+        return res.status(400).json({ error });
+    }
+    res.status(400).json({ error: {
+        messsage: 'File extension is not valid'
+        }
+    });    
 });
 
 module.exports = router;

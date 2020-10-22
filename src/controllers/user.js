@@ -103,3 +103,15 @@ module.exports.logOutAll = async (req, res) => {
         return utils.buildResponse(res, 500, [], error.message);
     }
 };
+
+module.exports.uplodaAvatar = async (req, res) => {
+    try {
+        console.log(req.file);
+        if (!req.file) {
+            return utils.buildResponse(res, 400, {}, 'An image need to be attached');
+        }
+        return utils.buildResponse(res, 200, {}, 'File Uploaded');
+    } catch (error) {
+        console.log(error);
+    }
+}
