@@ -1,6 +1,7 @@
 const mongoModel = require('../models/user');
 const utils = require('../../config/utils');
-const { mongo } = require('mongoose');
+const sharp = require('sharp');
+
 module.exports.createUser = async (req, res) => {
     try {
         let { body } = req;
@@ -109,8 +110,9 @@ module.exports.uplodaAvatar = async (req, res) => {
         if (!req.file) {
             return utils.buildResponse(res, 400, {}, 'An image need to be attached');
         }
+        const buffer = await sharp(req.file.buffer).png().resize({ width: 250, height: 250 }).toBuffer();
         req.user.fileExtension = req.file.originalname.split('.')[1];
-        req.user.avatar = req.file.buffer;
+        req.user.avatar = buffer;
         await req.user.save();
         return utils.buildResponse(res, 200, {}, 'File Uploaded');
     } catch (error) {
@@ -142,7 +144,7 @@ module.exports.getAvatar = async (req, res) => {
 
         // set the content-type to indicate express that we are sending an image instead of JSON
 
-        res.set('Content-Type', `image/${user.fileExtension}`);
+        res.set('Content-Type', `image/png`);
         return res.status(200).send(user.avatar);
     } catch (error) {
         console.log(error);
