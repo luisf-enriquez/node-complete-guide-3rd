@@ -1,6 +1,6 @@
 module.exports = {
 	server: {
-		puerto: process.env.port || 8080,
+		puerto: process.env.PORT || 8080,
 		corsOrigins: process.env.corsOrigins || '*'
 	},
 	parametros: {

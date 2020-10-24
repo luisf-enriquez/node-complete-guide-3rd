@@ -1,11 +1,13 @@
 const mongoModel = require('../models/user');
 const utils = require('../../config/utils');
 const sharp = require('sharp');
+const { sendWelcomeEmail, sendCancelEmail } = require('../emails/account');
 
 module.exports.createUser = async (req, res) => {
     try {
         let { body } = req;
         const result =  await mongoModel.addUser(body);
+        sendWelcomeEmail(result.user.email, result.user.name);
         return utils.buildResponse(res, 201, result, 'User created succesfully');
     } catch (error) {
         return res.status(400).json({
@@ -68,6 +70,7 @@ module.exports.deleteUser = async (req, res) => {
 
         // const result = await mongoModel.deleteById(req.user._id)
         await req.user.remove();
+        sendCancelEmail(req.user.email, req.user.name);
         return utils.buildResponse(res, 200, req.user, 'User deleted succesfully');
     } catch (error) {
         return utils.buildResponse(res, 500, error, 'An error ocurred while deleting user');
@@ -110,6 +113,8 @@ module.exports.uplodaAvatar = async (req, res) => {
         if (!req.file) {
             return utils.buildResponse(res, 400, {}, 'An image need to be attached');
         }
+
+        // here we are using sharp package to standarize image size and format
         const buffer = await sharp(req.file.buffer).png().resize({ width: 250, height: 250 }).toBuffer();
         req.user.fileExtension = req.file.originalname.split('.')[1];
         req.user.avatar = buffer;

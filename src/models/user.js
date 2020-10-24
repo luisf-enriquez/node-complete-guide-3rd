@@ -11,11 +11,12 @@ const addUser = async ({name, email, password, age = 0}) => {
         age
     });
 
-    const fetchedUser = await user.save();
-    const token = generateAuthToken({ _id: fetchedUser._id, name: fetchedUser.name, email:fetchedUser.email });
-    fetchedUser.tokens.push({ token });
-    await fetchedUser.save();
-    return { fetchedUser, token }
+    // const fetchedUser = await user.save();
+    await user.save();
+    const token = generateAuthToken({ _id: user._id, name: user.name, email:user.email });
+    user.tokens.push({ token });
+    await user.save();
+    return { user, token }
 }
 
 const getUser = async (id) => {
@@ -57,7 +58,7 @@ const findByCredentials = async (email, password) => {
 const generateAuthToken = (payload) => {
     const token = jwt.sign({
         payload
-    }, parametros.secret, { expiresIn: parametros.expiresIn });
+    }, process.env.JWT_SECRET, { expiresIn: parametros.expiresIn });
 
     return token;
 }

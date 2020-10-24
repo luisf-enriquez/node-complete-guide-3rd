@@ -4,7 +4,7 @@ const User = require('../schemas/user');
 const auth = async (req, res, next) => {
     try {
         const token  = req.header('Authorization').replace('Bearer ', '');
-        const decoded = jwt.verify(token, config.parametros.secret);
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
         // we look for an user that has that id and still have that token stored
         const user = await User.findOne({ _id: decoded.payload._id, 'tokens.token': token });
