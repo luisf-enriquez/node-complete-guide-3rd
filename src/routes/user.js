@@ -35,6 +35,10 @@ router.post('/users/logoutAll', auth, (req, res) => {
 
 router.put('/user/me', expressJoi(schema.updateUser), auth, (req, res) => {
     controller.updateUser(req, res);
+}, (error, req, res, next) => {
+    if (error.isBoom) {
+        return res.status(400).json({ status: 400, type: error.data[0].type, message: error.data[0].message });
+    }
 });
 
 router.delete('/user/me', auth, (req, res) => {

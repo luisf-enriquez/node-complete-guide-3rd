@@ -1,6 +1,6 @@
 const mongoModel = require('../models/task');
 const utils = require('../../config/utils');
-const { query } = require('express');
+
 module.exports.addTask = async (req, res) => {
     try {
         let data = req.body;

@@ -10,7 +10,8 @@ const taskSchema = new Schema({
 	},
 	completed: { 
 		type: Boolean, 
-		default: false 
+		default: false,
+		enum : [true, false]
 	},
 	// user owner of the task
 	user: {

@@ -28,7 +28,9 @@ const getAllUsers = async () => {
 };
 
 const updateById = async (id, data) => {
-    data.password = bcrypt.hashSync(data.password);
+    if (data.password) {
+        data.password = bcrypt.hashSync(data.password);
+    }
     return await User.findByIdAndUpdate(id, data, { new: true, runValidators: true, context: 'query' });
 };
 
