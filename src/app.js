@@ -34,6 +34,15 @@ app.use((req, res, next) => {
 // Routes
 app.use(require('./routes/routes'));
 
+//health check
+app.get('/status', (req, res) => {
+  res.status(200).json({
+    running: 'ok',
+    api: true,
+    env: process.env.ENVIRONMENT || 'dev'
+  })
+});
+
 // Custom 404 route not found handler
 app.use((req, res) => {
     res.status(404).json({
